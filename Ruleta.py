@@ -20,6 +20,8 @@ class RuletaMontecarlo:
         self.boton_girar = tk.Button(
             root, text="Girar la ruleta", command=self.animar_giro)
         self.boton_girar.pack()
+        
+        
 
         # Variables Necesarias
         self.angulo = 0
@@ -64,7 +66,6 @@ class RuletaMontecarlo:
             self.angulo = self.angulo % 360
             self.detener_bolita()
 
-    # Función para Detener Bolita
     def detener_bolita(self):
         velocidad_inicial = self.velocidad
         while velocidad_inicial > 0.5:
@@ -85,11 +86,22 @@ class RuletaMontecarlo:
         angulo_final = (self.angulo_inicial + self.angulo) % 360
         casilla = int((angulo_final / (360 / len(self.numeros_ruleta))))
 
-        # Muestra el resultado con el número de la casilla
+        # Obtiene el número de la casilla
         numero_resultado = self.numeros_ruleta[casilla]
+
+        # Obtiene el color de la casilla
+        color_casilla = "Verde" if numero_resultado == 0 else (
+            "Rojo" if casilla % 2 == 0 else "Negro")
+
+        # Determina si el número es par o impar
+        par_impar = "Par" if numero_resultado % 2 == 0 else "Impar"
+
+        # Crea el mensaje con la información
+        mensaje = f"Resultado: {numero_resultado} - {color_casilla} - {par_impar}"
+
         self.canvas.delete("resultado")
-        self.canvas.create_text(200, 380, text=f"Resultado: {numero_resultado}", font=(
-            "Helvetica", 16), tag="resultado", fill="white")
+        self.canvas.create_text(200, 380, text=mensaje, font=(
+            "Times New Roman", 16), tag="resultado", fill="white")
 
     # Función para Dibujar la Ruleta
 
@@ -137,7 +149,7 @@ class RuletaMontecarlo:
             numero_tag = f"numero_{numero}"
 
             self.canvas.create_text(x_text, y_text, text=str(
-                numero), font=("Helvetica", 13), fill="white", tags=(numero_tag,))
+                numero), font=("Times New Roman", 13), fill="white", tags=(numero_tag,))
 
             # Superposición de Números
             self.canvas.tag_raise(f"numero_{i}")
