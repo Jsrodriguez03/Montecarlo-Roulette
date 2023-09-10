@@ -20,8 +20,9 @@ class RuletaMontecarlo:
         self.boton_girar = tk.Button(
             root, text="Girar la ruleta", command=self.animar_giro)
         self.boton_girar.pack()
-        
-        
+
+        self.canvas.create_text(200, 25, text="Ruleta Montecarlos", font=(
+            "Times New Roman", 20, "bold"), fill="white")
 
         # Variables Necesarias
         self.angulo = 0
@@ -32,6 +33,8 @@ class RuletaMontecarlo:
         self.bolita_diametro = 15
         self.bolita_x = None
         self.bolita_y = None
+
+        self.dibujar_ruleta()
 
     # Función para Animar el Giro
     def animar_giro(self):
@@ -149,7 +152,7 @@ class RuletaMontecarlo:
             numero_tag = f"numero_{numero}"
 
             self.canvas.create_text(x_text, y_text, text=str(
-                numero), font=("Times New Roman", 13), fill="white", tags=(numero_tag,))
+                numero), font=("Times New Roman", 13, "bold"), fill="white", tags=(numero_tag,))
 
             # Superposición de Números
             self.canvas.tag_raise(f"numero_{i}")
@@ -168,6 +171,22 @@ class RuletaMontecarlo:
             self.canvas.tag_raise("numero_20")
             self.canvas.tag_raise("numero_14")
             self.canvas.tag_raise("numero_9")
+
+            # Dibuja las líneas radiales desde el centro hasta el final de la ruleta
+        for i in range(len(self.numeros_ruleta)):
+            angulo = i * (360 / len(self.numeros_ruleta))
+            x1 = 200
+            y1 = 200
+            x2 = 200 + 110 * math.cos(math.radians(angulo))
+            y2 = 200 + 110 * math.sin(math.radians(angulo))
+
+            # Dibuja la línea radial desde el centro hasta el círculo negro
+            self.canvas.create_line(x1, y1, x2, y2, fill="GOLD", width=4)
+
+            # Luego, dibuja la línea radial desde el círculo negro hasta el círculo bajo los números
+            x2 = 200 + 150 * math.cos(math.radians(angulo))
+            y2 = 200 + 150 * math.sin(math.radians(angulo))
+            self.canvas.create_line(x1, y1, x2, y2, fill="GOLD", width=2)
 
         # Dibuja un círculo debajo de los numeros
         # Calcula el tamaño proporcional para el círculo negro
