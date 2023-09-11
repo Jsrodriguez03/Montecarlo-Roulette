@@ -92,9 +92,9 @@ class RuletaMontecarlo:
         # Obtiene el número de la casilla
         numero_resultado = self.numeros_ruleta[casilla]
 
-        # Obtiene el color de la casilla
-        color_casilla = "Verde" if numero_resultado == 0 else (
-            "Rojo" if casilla % 2 == 0 else "Negro")
+        # Determina el color de la casilla
+        color_casilla = "Rojo" if numero_resultado in [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36] else (
+            "Negro" if numero_resultado in [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35] else "Verde")
 
         # Determina si el número es par o impar
         par_impar = "Par" if numero_resultado % 2 == 0 else "Impar"
