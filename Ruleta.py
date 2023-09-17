@@ -2,27 +2,33 @@ import tkinter as tk
 import random
 import math
 import time
+from tkinter.tix import IMAGETEXT
+from PIL import Image, ImageTk
+from tkinter import PhotoImage
+import pygame
+from PIL import Image, ImageTk
 
 
 class RuletaMontecarlo:
     def __init__(self, root):
-        # Ventana Princiál
+       # Ventana Principal
         self.root = root
         self.root.title("Simulación de Ruleta de Montecarlo")
-        # root.configure(bg="black")
 
-        # Lienzo para dibujar la ruleta y Bolita
+        # Lienzo para dibujar la ruleta y la bolita
         self.canvas = tk.Canvas(root, width=400, height=400)
         self.canvas.pack()
-        self.canvas.configure(bg="black")
+        self.canvas.configure(bg="#632218")
 
         # Botón Para Girar la Ruleta
         self.boton_girar = tk.Button(
             root, text="Girar la ruleta", command=self.animar_giro)
         self.boton_girar.pack()
 
-        self.canvas.create_text(200, 25, text="Ruleta Montecarlos", font=(
+        self.canvas.create_text(200, 25, text="Monte-Carlos Roulette", font=(
             "Times New Roman", 20, "bold"), fill="white")
+
+        self.dibujar_ruleta()
 
         # Variables Necesarias
         self.angulo = 0
@@ -34,9 +40,8 @@ class RuletaMontecarlo:
         self.bolita_x = None
         self.bolita_y = None
 
-        self.dibujar_ruleta()
-
     # Función para Animar el Giro
+
     def animar_giro(self):
         if not self.girando:
             self.girando = True
@@ -93,14 +98,14 @@ class RuletaMontecarlo:
         numero_resultado = self.numeros_ruleta[casilla]
 
         # Determina el color de la casilla
-        color_casilla = "Rojo" if numero_resultado in [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36] else (
-            "Negro" if numero_resultado in [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35] else "Verde")
+        color_casilla = "Red" if numero_resultado in [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36] else (
+            "Black" if numero_resultado in [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35] else "Green")
 
         # Determina si el número es par o impar
-        par_impar = "Par" if numero_resultado % 2 == 0 else "Impar"
+        par_impar = "Odd" if numero_resultado % 2 == 0 else "Even"
 
         # Crea el mensaje con la información
-        mensaje = f"Resultado: {numero_resultado} - {color_casilla} - {par_impar}"
+        mensaje = f"{numero_resultado} - {color_casilla} - {par_impar}"
 
         self.canvas.delete("resultado")
         self.canvas.create_text(200, 380, text=mensaje, font=(
@@ -120,7 +125,7 @@ class RuletaMontecarlo:
 
         # Dibuja un círculo para representar la ruleta
         self.canvas.create_oval(50 + 1, 50 + 1, 350 - 1,
-                                350 - 1, outline="GOLD", width=4)
+                                350 - 1, outline="#FFC455", width=4)
 
         # Dibuja las divisiones de la ruleta con números
         for i, numero in enumerate(self.numeros_ruleta):
@@ -139,7 +144,7 @@ class RuletaMontecarlo:
 
             # Dibuja el arco de la división
             self.canvas.create_arc(50 + 1, 50 + 1, 350 - 1, 350 - 1, start=angulo,
-                                   extent=360 / len(self.numeros_ruleta), outline="GOLD", width=2, fill=color_fondo)
+                                   extent=360 / len(self.numeros_ruleta), outline="#FFC455", width=2, fill=color_fondo)
 
             # Dibuja el número en el centro de la división
             angulo = i * (360 / len(self.numeros_ruleta))
@@ -181,12 +186,12 @@ class RuletaMontecarlo:
             y2 = 200 + 110 * math.sin(math.radians(angulo))
 
             # Dibuja la línea radial desde el centro hasta el círculo negro
-            self.canvas.create_line(x1, y1, x2, y2, fill="GOLD", width=4)
+            self.canvas.create_line(x1, y1, x2, y2, fill="#FFC455", width=4)
 
             # Luego, dibuja la línea radial desde el círculo negro hasta el círculo bajo los números
             x2 = 200 + 150 * math.cos(math.radians(angulo))
             y2 = 200 + 150 * math.sin(math.radians(angulo))
-            self.canvas.create_line(x1, y1, x2, y2, fill="GOLD", width=2)
+            self.canvas.create_line(x1, y1, x2, y2, fill="#FFC455", width=2)
 
         # Dibuja un círculo debajo de los numeros
         # Calcula el tamaño proporcional para el círculo negro
@@ -200,7 +205,7 @@ class RuletaMontecarlo:
 
         # Dibuja el círculo negro proporcional
         self.canvas.create_oval(
-            x1_circulo, y1_circulo, x2_circulo, y2_circulo, outline="GOLD", width=4)
+            x1_circulo, y1_circulo, x2_circulo, y2_circulo, outline="#FFC455", width=4)
 
         # Dibuja un círculo negro en la mitad de la ruleta
         # Calcula el tamaño proporcional para el círculo negro
@@ -214,15 +219,33 @@ class RuletaMontecarlo:
 
         # Dibuja el círculo negro proporcional
         self.canvas.create_oval(
-            x1_circulo, y1_circulo, x2_circulo, y2_circulo, fill="black", outline="GOLD")
+            x1_circulo, y1_circulo, x2_circulo, y2_circulo,  outline="#FFC455")
+
+        # Cargar la imagen con transparencia
+        self.imagen_redimensionada = Image.open("Centro.png").convert("RGBA")
+        self.image_tk = ImageTk.PhotoImage(self.imagen_redimensionada)
+
+        # Redimensionar la imagen a 260x260 píxeles
+        self.imagen_redimensionada = self.imagen_redimensionada.resize(
+            (260, 260))
+
+        # Crear la imagen Tkinter
+        self.image_tk = ImageTk.PhotoImage(self.imagen_redimensionada)
+
+        # Mostrar la imagen sin fondo blanco y elevarla sobre otros elementos
+        self.canvas.create_image(71, 71, anchor=tk.NW,
+                                 image=self.image_tk, tag="imagen")
+        # Elevar la imagen sobre otros elementos
+        self.canvas.tag_raise("imagen")
 
     def dibujar_bolita(self):
-        # Dibuja la bolita
-        self.canvas.create_oval(self.bolita_x - self.bolita_diametro / 2,
-                                self.bolita_y - self.bolita_diametro / 2,
-                                self.bolita_x + self.bolita_diametro / 2,
-                                self.bolita_y + self.bolita_diametro / 2,
-                                fill="red", tag="bolita")
+        if self.bolita_x is not None and self.bolita_y is not None:
+            # Dibuja la bolita sobre la imagen de la ruleta
+            self.canvas.create_oval(self.bolita_x - self.bolita_diametro / 2,
+                                    self.bolita_y - self.bolita_diametro / 2,
+                                    self.bolita_x + self.bolita_diametro / 2,
+                                    self.bolita_y + self.bolita_diametro / 2,
+                                    fill="white", tag="bolita")
 
 
 if __name__ == "__main__":
