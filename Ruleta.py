@@ -2,10 +2,7 @@ import tkinter as tk
 import random
 import math
 import time
-from tkinter.tix import IMAGETEXT
 from PIL import Image, ImageTk
-from tkinter import PhotoImage
-import pygame
 from PIL import Image, ImageTk
 
 
@@ -25,7 +22,7 @@ class RuletaMontecarlo:
         self.imagen_centro1 = self.imagen_centro1.resize((180, 180))
         self.imagen_tk1 = ImageTk.PhotoImage(self.imagen_centro1)
 
-        # Cargar la segunda imagen del centro
+        # Cargar la segunda imagen de los Bordes
         self.imagen_centro2 = Image.open("Bordes.png").convert("RGBA")
         self.imagen_centro2 = self.imagen_centro2.resize((400, 400))
         self.imagen_tk2 = ImageTk.PhotoImage(self.imagen_centro2)
@@ -35,7 +32,8 @@ class RuletaMontecarlo:
             root, text="Girar la ruleta", command=self.animar_giro)
         self.boton_girar.pack()
 
-        self.canvas.create_text(200, 25, text="Monte-Carlos Roulette", font=(
+        # Texto Principal
+        self.canvas.create_text(250, 25, text="Monte-Carlos Roulette", font=(
             "Baskerville", 20, "bold"), fill="white")
 
         self.dibujar_ruleta()
@@ -46,11 +44,9 @@ class RuletaMontecarlo:
         self.girando = False
         self.friction = 0.8  # Factor de fricción
         self.resultado = None
-        self.bolita_diametro = 15
+        self.bolita_diametro = 10
         self.bolita_x = None
         self.bolita_y = None
-
-    # Función para Animar el Giro
 
     def animar_giro(self):
         if not self.girando:
@@ -58,8 +54,7 @@ class RuletaMontecarlo:
             self.resultado = None
             self.angulo_inicial = random.uniform(
                 0, 360)  # Ángulo inicial aleatorio
-            self.bolita_x = 200
-            self.bolita_y = 50
+
             self.canvas.delete("bolita")  # Limpia cualquier bolita anterior
             # Limpia cualquier resultado anterior
             self.canvas.delete("resultado")
@@ -72,7 +67,6 @@ class RuletaMontecarlo:
         # Luego, en el método detener_bolita, después de mostrar el resultado:
         self.girando = False
 
-    # Función para Girar Ruleta
     def girar_ruleta(self):
         self.canvas.delete("flecha")
         self.angulo += self.velocidad
@@ -88,9 +82,9 @@ class RuletaMontecarlo:
         velocidad_inicial = self.velocidad
         while velocidad_inicial > 0.5:
             self.angulo += velocidad_inicial
-            self.bolita_x = 200 + 150 * \
+            self.bolita_x = 250 + 100 * \
                 math.cos(math.radians(self.angulo_inicial + self.angulo))
-            self.bolita_y = 200 + 150 * \
+            self.bolita_y = 250 + 100 * \
                 math.sin(math.radians(self.angulo_inicial + self.angulo))
             velocidad_inicial *= self.friction
             # Elimina la bolita anterior antes de redibujarla
@@ -118,10 +112,8 @@ class RuletaMontecarlo:
         mensaje = f"{numero_resultado} - {color_casilla} - {par_impar}"
 
         self.canvas.delete("resultado")
-        self.canvas.create_text(200, 380, text=mensaje, font=(
+        self.canvas.create_text(250, 470, text=mensaje, font=(
             "Baskerville", 16), tag="resultado", fill="white")
-
-    # Función para Dibujar la Ruleta
 
     def dibujar_ruleta(self):
         # Agrega esta lista de números en la inicialización de la clase RuletaMontecarlo Números del 0 al 36
@@ -133,35 +125,23 @@ class RuletaMontecarlo:
                          "red", "black", "red", "black", "red", "black", "red", "black", "red", "black",
                          "red", "black", "red", "black", "red", "black"]
 
-        # Dibuja un círculo para representar la ruleta
-        self.canvas.create_oval(50 + 1, 50 + 1, 350 - 1,
-                                350 - 1, outline="#F6DA80", width=4)
-
         # Dibuja las divisiones de la ruleta con números
         for i, numero in enumerate(self.numeros_ruleta):
             angulo = i * (360 / len(self.numeros_ruleta))
-            x1 = 200 + 150 * (0.9 if i % 2 == 0 else 0.95) * \
-                (-(1 if i % 2 == 0 else -1) * 0.9 * 0.5)
-            y1 = 200 + 150 * (0.9 if i % 2 == 0 else 0.95) * \
-                (-0.5 if i % 2 == 0 else 0.5)
-            x2 = 200 + 150 * (0.9 if i % 2 == 0 else 0.95) * \
-                (-(1 if i % 2 == 0 else -1) * 0.9)
-            y2 = 200 + 150 * (0.9 if i % 2 == 0 else 0.95) * \
-                (-1 if i % 2 == 0 else 1)
 
             # Determina el color de fondo de la casilla
             color_fondo = colores_fondo[i]
 
-            # Dibuja el arco de la división
-            self.canvas.create_arc(50 + 1, 50 + 1, 350 - 1, 350 - 1, start=angulo,
-                                   extent=360 / len(self.numeros_ruleta), outline="#F6DA80", width=2, fill=color_fondo)
+            # Dibuja el arco de la división (CON ESTO MUEVO LAS CASILLAS CON COLORES)
+            self.canvas.create_arc(100 + 1, 100 + 1, 400 - 1, 400 - 1, start=angulo,
+                                   extent=360 / len(self.numeros_ruleta), outline="#F6DA80", width=4, fill=color_fondo)
 
-            # Dibuja el número en el centro de la división
+            # Dibuja el número en el centro de la división (CON ESTO MUEVO LOS NUMEROS)
             angulo = i * (360 / len(self.numeros_ruleta))
-            x_text = 200 + 135 * \
+            x_text = 250 + 135 * \
                 math.cos(math.radians(
                     angulo + (360 / (len(self.numeros_ruleta) * 2))))
-            y_text = 200 + 135 * \
+            y_text = 250 + 135 * \
                 math.sin(math.radians(
                     angulo + (360 / (len(self.numeros_ruleta) * 2))))
             numero_tag = f"numero_{numero}"
@@ -187,20 +167,21 @@ class RuletaMontecarlo:
             self.canvas.tag_raise("numero_14")
             self.canvas.tag_raise("numero_9")
 
-            # Dibuja las líneas radiales desde el centro hasta el final de la ruleta
+        # Dibuja las líneas radiales desde el centro hasta el final de la ruleta
         for i in range(len(self.numeros_ruleta)):
+            # CON ESTO SE DIBUJA LAS LINEAS
             angulo = i * (360 / len(self.numeros_ruleta))
-            x1 = 200
-            y1 = 200
-            x2 = 200 + 110 * math.cos(math.radians(angulo))
-            y2 = 200 + 110 * math.sin(math.radians(angulo))
+            x1 = 250
+            y1 = 250
+            x2 = 250 + 110 * math.cos(math.radians(angulo))
+            y2 = 250 + 110 * math.sin(math.radians(angulo))
 
             # Dibuja la línea radial desde el centro hasta el círculo negro
             self.canvas.create_line(x1, y1, x2, y2, fill="#F6DA80", width=4)
 
             # Luego, dibuja la línea radial desde el círculo negro hasta el círculo bajo los números
-            x2 = 200 + 150 * math.cos(math.radians(angulo))
-            y2 = 200 + 150 * math.sin(math.radians(angulo))
+            x2 = 250 + 150 * math.cos(math.radians(angulo))
+            y2 = 250 + 150 * math.sin(math.radians(angulo))
             self.canvas.create_line(x1, y1, x2, y2, fill="#F6DA80", width=2)
 
         # Dibuja un círculo debajo de los numeros
@@ -208,32 +189,22 @@ class RuletaMontecarlo:
         radio_circulo = 0.7 * 160  # 70% del radio de la ruleta
 
         # Calcula las coordenadas para el círculo negro
-        x1_circulo = 200 - radio_circulo
-        y1_circulo = 200 - radio_circulo
-        x2_circulo = 200 + radio_circulo
-        y2_circulo = 200 + radio_circulo
+        x1_circulo = 250 - radio_circulo
+        y1_circulo = 250 - radio_circulo
+        x2_circulo = 250 + radio_circulo
+        y2_circulo = 250 + radio_circulo
 
         # Dibuja el círculo negro proporcional
         self.canvas.create_oval(
             x1_circulo, y1_circulo, x2_circulo, y2_circulo, outline="#F6DA80", width=4)
 
-        # Dibuja un círculo negro en la mitad de la ruleta
-        # Calcula el tamaño proporcional para el círculo negro
-        radio_circulo_negro = 0.7 * 120  # 70% del radio de la ruleta
-
-        # Calcula las coordenadas para el círculo negro
-        x1_circulo = 200 - radio_circulo_negro
-        y1_circulo = 200 - radio_circulo_negro
-        x2_circulo = 200 + radio_circulo_negro
-        y2_circulo = 200 + radio_circulo_negro
-
-        # Mostrar la primera imagen sin fondo blanco
-        self.canvas.create_image(110, 110, anchor=tk.NW,
+        # Mostrar la primera imagen sin fondo blanco - CENTRO
+        self.canvas.create_image(160, 160, anchor=tk.NW,
                                  image=self.imagen_tk1, tag="imagen1")
 
         # Superponer la segunda imagen
         self.canvas.create_image(
-            0, 1, anchor=tk.NW, image=self.imagen_tk2, tag="imagen2")
+            51, 51, anchor=tk.NW, image=self.imagen_tk2, tag="imagen2")
 
         # Elevar las imágenes sobre otros elementos
         self.canvas.tag_raise("imagen1")
