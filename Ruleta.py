@@ -13,7 +13,7 @@ class RuletaMontecarlo:
         self.root.title("Simulación de Ruleta de Montecarlo")
 
         # Lienzo para dibujar la ruleta y la bolita
-        self.canvas = tk.Canvas(root, width=500, height=500)
+        self.canvas = tk.Canvas(root, width=500, height=560)
         self.canvas.pack()
         self.canvas.configure(bg="black")
 
@@ -27,10 +27,12 @@ class RuletaMontecarlo:
         self.imagen_centro2 = self.imagen_centro2.resize((400, 400))
         self.imagen_tk2 = ImageTk.PhotoImage(self.imagen_centro2)
 
-        # Botón Para Girar la Ruleta
+        # Crear un botón con bordes redondeados
         self.boton_girar = tk.Button(
-            root, text="Girar la ruleta", command=self.animar_giro)
-        self.boton_girar.pack()
+            root, text="Girar Ruleta", command=self.animar_giro, font=("Baskerville", 16))
+        self.boton_girar.configure(bg="#4BFF21", fg="black", relief="flat")
+        self.boton_girar_window = self.canvas.create_window(
+            250, 520, window=self.boton_girar)
 
         # Texto Principal
         self.canvas.create_text(250, 25, text="Monte-Carlos Roulette", font=(
@@ -40,9 +42,9 @@ class RuletaMontecarlo:
 
         # Variables Necesarias
         self.angulo = 0
-        self.velocidad = 100  # Velocidad de giro
+        self.velocidad = 100
         self.girando = False
-        self.friction = 0.8  # Factor de fricción
+        self.friction = 0.8
         self.resultado = None
         self.bolita_diametro = 10
         self.bolita_x = None
@@ -133,11 +135,10 @@ class RuletaMontecarlo:
             color_fondo = colores_fondo[i]
 
             # Dibuja el arco de la división (CON ESTO MUEVO LAS CASILLAS CON COLORES)
-            self.canvas.create_arc(100 + 1, 100 + 1, 400 - 1, 400 - 1, start=angulo,
-                                   extent=360 / len(self.numeros_ruleta), outline="#F6DA80", width=4, fill=color_fondo)
+            self.canvas.create_arc(100 + 1, 100 + 1, 400 - 1, 400 - 1, start=angulo, extent=360 / len(
+                self.numeros_ruleta), outline="#F6DA80", width=4, fill=color_fondo)
 
             # Dibuja el número en el centro de la división (CON ESTO MUEVO LOS NUMEROS)
-            angulo = i * (360 / len(self.numeros_ruleta))
             x_text = 250 + 135 * \
                 math.cos(math.radians(
                     angulo + (360 / (len(self.numeros_ruleta) * 2))))
