@@ -18,12 +18,12 @@ class RuletaMontecarlo:
         self.canvas.configure(bg="black")
 
         # Cargar la primera imagen del centro
-        self.imagen_centro1 = Image.open("Centro2.png").convert("RGBA")
+        self.imagen_centro1 = Image.open("Images/Centro2.png").convert("RGBA")
         self.imagen_centro1 = self.imagen_centro1.resize((180, 180))
         self.imagen_tk1 = ImageTk.PhotoImage(self.imagen_centro1)
 
         # Cargar la segunda imagen de los Bordes
-        self.imagen_centro2 = Image.open("Bordes.png").convert("RGBA")
+        self.imagen_centro2 = Image.open("Images/Bordes.png").convert("RGBA")
         self.imagen_centro2 = self.imagen_centro2.resize((400, 400))
         self.imagen_tk2 = ImageTk.PhotoImage(self.imagen_centro2)
 
